@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бесплатный генератор музыки Нейросеть</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #141E30, #243B55);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 900px;
+            text-align: justify;
+        }
+
+        .button {
+            background-color: #ff6b6b;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 40px;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+            margin-bottom: 40px;
+        }
+
+        .button:hover {
+            background-color: #ff4757;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        /* Описание сайта */
+        .description {
+            margin-bottom: 40px;
+            text-align: center;
+            max-width: 1000px;
+        }
+
+        /* FAQ секция */
+        .faq-section {
+            width: 100%;
+            max-width: 1200px;
+            text-align: left;
+        }
+
+        .faq-section h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Стиль для вопросов в два ряда */
+        .faq-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .faq-item {
+            background-color: #2C3E50;
+            border: 1px solid #00d2d3;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .faq-item:hover {
+            background-color: #00d2d3;
+        }
+
+        .faq-item p.question {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            background-color: #1b2d3c;
+            padding: 0 15px;
+            margin-top: 10px;
+            border-radius: 10px;
+            color: #b7c7d6;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px; /* Adjust as needed */
+            padding: 10px 15px;
+        }
+
+        /* Стили для остальных страниц */
+        .page {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+            text-align: center;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .loading-animation {
+            margin-top: 20px;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .style-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .style-button {
+            background-color: #00d2d3;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .style-button:hover {
+            background-color: #00b0b9;
+        }
+
+        .download-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .download-button {
+            background-color: #2ecc71;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+
+        .download-button:hover {
+            background-color: #27ae60;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .style-buttons, .download-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .style-button, .download-button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Главная страница -->
+    <div class="page home-page" style="display: flex;">
+        <h1>Бесплатный генератор музыки Нейросеть</h1>
+
+        <!-- Описание сайта -->
+        <div class="description">
+            <p>
+                Добро пожаловать на наш сайт, где вы сможете за считанные секунды сгенерировать уникальную музыку, используя возможности современной нейросети! Мы предлагаем простой и быстрый способ создания музыки для любых нужд — от личных проектов до коммерческих видео и презентаций. С нашей платформой вам не нужно обладать музыкальными навыками или устанавливать сложное программное обеспечение. Всё, что требуется — выбрать стиль музыки и нажать пару кнопок.
+            </p>
+            <p>
+                Наши алгоритмы используют глубокие нейронные сети, чтобы создать неповторимые музыкальные произведения, которые соответствуют вашему выбору стиля. Мы поддерживаем широкий спектр музыкальных жанров, таких как поп, рок, хип-хоп, классическая музыка и многое другое. Независимо от того, создаете ли вы фоновую музыку для видео или хотите просто получить удовольствие от прослушивания чего-то нового, наш сервис станет идеальным решением.
+            </p>
+            <p>
+                Музыка, созданная на нашей платформе, доступна для скачивания в форматах высокого качества, таких как MP3 320 kbps и WAV 16-bit 44100 Hz. Вы можете использовать её в любых целях — как для личных, так и для коммерческих проектов — и всё это абсолютно бесплатно! Никаких скрытых платежей или подписок. Сайт предоставляет быстрый доступ к профессиональному инструменту для создания музыки с минимальными усилиями с вашей стороны. Попробуйте прямо сейчас и убедитесь в простоте и эффективности нашего сервиса!
+            </p>
+        </div>
+
+        <button class="button" onclick="showStylesPage()">Создать музыку бесплатно</button>
+
+        <!-- Популярные вопросы -->
+        <div class="faq-section">
+            <h2>Популярные вопросы</h2>
+            <div class="faq-grid">
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <p class="question">Ваш сайт бесплатный?</p>
+                    <div class="faq-answer">
+                        <p>Наш сайт полностью бесплатный для всех, вы можете использовать музыку в любых целях без ограничений.</p>
+                    </div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <p class="question">Можно ли скачивать музыку?</p>
+                    <div class="faq-answer">
+                        <p>Да, после создания музыки вы можете скачать её в форматах MP3 или WAV.</p>
+                    </div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <p class="question">Есть ли ограничения по стилям музыки?</p>
+                    <div class="faq-answer">
+                        <p>Нет, вы можете выбрать любой доступный стиль: поп, рок, хип-хоп, электронная, классическая и другие.</p>
+                    </div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <p class="question">Могу ли я использовать музыку в коммерческих проектах?</p>
+                    <div class="faq-answer">
+                        <p>Да, вся созданная музыка может быть использована в любых проектах, в том числе коммерческих.</p>
+                    </div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <p class="question">Как долго создается музыка?</p>
+                    <div class="faq-answer">
+                        <p>Процесс создания музыки занимает около 3 секунд, после чего можно скачать результат.</p>
+                    </div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <p class="question">Нужна ли регистрация?</p>
+                    <div class="faq-answer">
+                        <p>Нет, вы можете создавать и скачивать музыку без регистрации.</p>
+                    </div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <p class="question">Какое качество звука поддерживается?</p>
+                    <div class="faq-answer">
+                        <p>Мы поддерживаем форматы MP3 320 kbps и WAV 16-bit 44100 Hz для наилучшего качества звука.</p>
+                    </div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <p class="question">Можно ли изменить созданную музыку?</p>
+                    <div class="faq-answer">
+                        <p>Да, вы можете редактировать и изменять скачанную музыку по своему усмотрению.</p>
+                    </div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <p class="question">Какие стили музыки доступны?</p>
+                    <div class="faq-answer">
+                        <p>Мы предлагаем широкий выбор стилей, включая поп, рок, хип-хоп, электронную, классическую, джаз, блюз, ло-фай и многие другие.</p>
+                    </div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <p class="question">Поддерживает ли сайт мобильные устройства?</p>
+                    <div class="faq-answer">
+                        <p>Да, наш сайт полностью адаптивен и работает на всех типах устройств, включая мобильные телефоны и планшеты.</p>
+                    </div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <p class="question">Как часто обновляются стили музыки?</p>
+                    <div class="faq-answer">
+                        <p>Мы регулярно добавляем новые стили и обновляем существующие, чтобы предоставить пользователям максимальный выбор.</p>
+                    </div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <p class="question">Можно ли интегрировать музыку в приложения?</p>
+                    <div class="faq-answer">
+                        <p>Да, вы можете использовать созданную музыку в мобильных и веб-приложениях, соблюдая наши условия использования.</p>
+                    </div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <p class="question">Какие технологии используются для генерации музыки?</p>
+                    <div class="faq-answer">
+                        <p>Мы используем передовые нейросетевые алгоритмы и машинное обучение для создания уникальных музыкальных композиций.</p>
+                    </div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <p class="question">Можно ли поделиться музыкой напрямую с другими?</p>
+                    <div class="faq-answer">
+                        <p>Да, вы можете делиться ссылками на скачанную музыку или загружать её на различные платформы.</p>
+                    </div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <p class="question">Как обеспечить уникальность созданной музыки?</p>
+                    <div class="faq-answer">
+                        <p>Наши нейросети генерируют музыку на основе множества данных, что обеспечивает уникальность каждой композиции.</p>
+                    </div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <p class="question">Можно ли создать музыку для определенного настроения?</p>
+                    <div class="faq-answer">
+                        <p>Да, вы можете выбрать стиль и задать параметры, чтобы музыка соответствовала нужному вам настроению.</p>
+                    </div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <p class="question">Какие форматы файлов доступны для скачивания?</p>
+                    <div class="faq-answer">
+                        <p>Мы предлагаем скачивание в форматах MP3 320 kbps и WAV 16-bit 44100 Hz.</p>
+                    </div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <p class="question">Есть ли ограничения на количество созданной музыки?</p>
+                    <div class="faq-answer">
+                        <p>Нет, вы можете создавать и скачивать неограниченное количество музыкальных композиций.</p>
+                    </div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <p class="question">Как связаться с поддержкой?</p>
+                    <div class="faq-answer">
+                        <p>Вы можете связаться с нашей службой поддержки через форму обратной связи на сайте.</p>
+                    </div>
+                </div>
+                <div class="faq-item" onclick="toggleFaq(this)">
+                    <p class="question">Могу ли я получить уведомления о новых функциях?</p>
+                    <div class="faq-answer">
+                        <p>Да, подписавшись на нашу рассылку, вы будете получать уведомления о новых функциях и обновлениях.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Страница выбора стиля музыки -->
+    <div class="page styles-page">
+        <h1>Выберите стиль музыки</h1>
+        <div class="style-buttons">
+            <button class="style-button" onclick="showLoadingPage()">Поп</button>
+            <button class="style-button" onclick="showLoadingPage()">Хип-хоп</button>
+            <button class="style-button" onclick="showLoadingPage()">Электронная</button>
+            <button class="style-button" onclick="showLoadingPage()">Рок</button>
+            <button class="style-button" onclick="showLoadingPage()">Классическая</button>
+            <button class="style-button" onclick="showLoadingPage()">Джаз</button>
+            <button class="style-button" onclick="showLoadingPage()">Блюз</button>
+            <button class="style-button" onclick="showLoadingPage()">Ло-фай</button>
+            <button class="style-button" onclick="showLoadingPage()">Рэп</button>
+            <button class="style-button" onclick="showLoadingPage()">Инди</button>
+        </div>
+    </div>
+
+    <!-- Страница загрузки -->
+    <div class="page loading-page">
+        <h1>Подождите, ваша музыка создаётся...</h1>
+        <div class="loading-animation"></div>
+    </div>
+
+    <!-- Страница скачивания -->
+    <div class="page download-page">
+        <h1>Музыка готова!</h1>
+        <div class="download-buttons">
+            <button class="download-button" onclick="downloadMp3()">Скачать MP3 320</button>
+            <button class="download-button" onclick="downloadWav()">Скачать WAV, 16-bit, 44100 Hz</button>
+        </div>
+    </div>
+
+    <script>
+        function showStylesPage() {
+            document.querySelector('.home-page').style.display = 'none';
+            document.querySelector('.styles-page').style.display = 'flex';
+        }
+
+        function showLoadingPage() {
+            document.querySelector('.styles-page').style.display = 'none';
+            document.querySelector('.loading-page').style.display = 'flex';
+
+            // Через 3 секунды переход на страницу с кнопками скачивания
+            setTimeout(showDownloadPage, 3000);
+        }
+
+        function showDownloadPage() {
+            document.querySelector('.loading-page').style.display = 'none';
+            document.querySelector('.download-page').style.display = 'flex';
+        }
+
+        function downloadMp3() {
+            window.open('https://ify.ac/1PLM', '_blank');
+        }
+
+        function downloadWav() {
+            window.open('https://ify.ac/1PLM', '_blank');
+        }
+
+        function toggleFaq(faqItem) {
+            faqItem.classList.toggle('active');
+        }
+
+        // Закрытие других FAQ при открытии нового
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            item.addEventListener('click', () => {
+                faqItems.forEach(i => {
+                    if (i !== item) {
+                        i.classList.remove('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
